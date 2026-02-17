@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Trash2, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { createPlanService, updatePlanService } from "./service";
 
 interface IPlanDialogProps {
   open: boolean;
@@ -32,6 +35,7 @@ const PlanDialog: React.FC<IPlanDialogProps> = ({
   onClose,
   plan,
 }) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -75,7 +79,7 @@ const PlanDialog: React.FC<IPlanDialogProps> = ({
     }
   }, [plan, reset]);
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const features = data.features.map((f) => f.value.trim());
 
     // Prevent duplicate features
@@ -90,9 +94,25 @@ const PlanDialog: React.FC<IPlanDialogProps> = ({
       features,
     };
 
-    console.log("Request Payload:", payload);
-    // onClose();
-    // reset();
+    let response: any;
+
+    if (plan && plan?._id) {
+      response = await updatePlanService(plan?._id, payload);
+    } else {
+      response = await createPlanService(payload);
+    }
+
+    if (response.ok) {
+      onClose();
+      reset();
+      toast.success("Plan saved successfully");
+      router.refresh();
+    } else {
+      const error = await response.json();
+      toast.error("Request failed", {
+        description: error?.error || "Something went wrong",
+      });
+    }
   };
 
   const watchedFeatures = watch("features");
@@ -164,7 +184,7 @@ const PlanDialog: React.FC<IPlanDialogProps> = ({
           </div>
 
           {/* Features */}
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-48 overflow-y-auto">
             <Label>Features *</Label>
 
             {fields.map((field, index) => {

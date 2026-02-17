@@ -1,75 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
+import { PlanService } from "@/backend/modules/plan/plan.service";
+import { CreatePlanDto } from "@/backend/modules/plan/dto/create-plan.dto";
+import { validateDto } from "@/backend/utils/input-validator.util";
+
+import "reflect-metadata";
+
+const planService = new PlanService();
+
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+
+        const dto = await validateDto(CreatePlanDto, body);
+
+        const plan = await planService.createPlan(dto);
+
+        return NextResponse.json({ plan }, { status: 201 });
+    } catch (err: any) {
+        console.error("Error creating plan:", err);
+        return NextResponse.json({ error: err.message || "Something went wrong" }, { status: 400 });
+    }
+}
 
 export async function GET(req: NextRequest) {
     try {
+        const plans = await planService.findAll();
 
-        const dummyPlans = [
-            {
-                _id: "1",
-                name: "Basic",
-                duration: 30,
-                price: 1000,
-                members:21,
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            {
-                _id: "2",
-                name: "Premium",
-                duration: 30,
-                price: 1000,
-                members:11,
-
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            
-            {
-                _id: "3",
-                name: "Pro",
-                duration: 30,
-                price: 1000,
-                members:10,
-
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            {
-                _id: "4",
-                name: "Enterprise",
-                duration: 30,
-                price: 1000,
-                members:14,
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            {
-                _id: "5",
-                name: "Gold",
-                duration: 30,
-                price: 1000,
-                members:14,
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            {
-                _id: "6",
-                name: "Platinum",
-                duration: 30,
-                price: 1500,
-                members:14,
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-            {
-                _id: "7",
-                name: "Silver",
-                duration: 30,
-                price: 1200,
-                members:14,
-                features:['Access to all classes', 'Access to all equipment', 'Access to all amenities'],
-            },
-        ];
-        return NextResponse.json({ plans: dummyPlans }, { status: 200 });
+        return NextResponse.json({ plans }, { status: 200 });
     } catch (err: any) {
-        console.error("Error fetching users:", err);
-        return NextResponse.json(
-            { error: err.message || "Something went wrong" },
-            { status: 400 }
-        );
+        console.error("Error fetching plans:", err);
+        return NextResponse.json({ error: err.message || "Something went wrong" }, { status: 400 });
     }
 }
