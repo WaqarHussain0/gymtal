@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
         // Parse JSON body
         const body = await req.json();
 
-
-
         // Transform to DTO and validate
         const dto = await validateDto(CreateUserDto, body);
 

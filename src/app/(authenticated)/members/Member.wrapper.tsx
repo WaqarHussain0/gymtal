@@ -103,8 +103,10 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
                     <MemberTable
                         className="h-[45vh] overflow-y-auto"
                         members={members || []} />
+  {
+                        members.length !== 0 &&
                     <Pagination page={currentPage} totalRecords={meta.totalRecords} onPageChange={handlePageChange} totalPage={meta.totalPages} />
-
+}
                 </CardContent>
             </Card>
 

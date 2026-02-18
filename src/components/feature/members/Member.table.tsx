@@ -41,7 +41,6 @@ interface IMemberTable {
 }
 const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
 
-  console.log(members,'!!!!!!!!!!!!!!!!')
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any | null>(null);

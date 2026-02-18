@@ -25,8 +25,8 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
     });
 
     const data = await res.json();
-
-    if (data.meta.totalPages < Number(page) && !search) {
+    
+    if (data.data.length !== 0 && data?.meta?.totalPages < Number(page) && !search) {
         return redirect(`${PAGE_ROUTES.members}`);
     }
 

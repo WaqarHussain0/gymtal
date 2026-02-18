@@ -43,7 +43,7 @@ const UserWrapper: React.FC<IUserWrapper> = ({ users, meta, currentPage }) => {
             if (search) params.set("search", search);
             router.replace(`${PAGE_ROUTES.users}?${params.toString()}`);
         },
-        [router] 
+        [router]
     );
 
 
@@ -113,8 +113,11 @@ const UserWrapper: React.FC<IUserWrapper> = ({ users, meta, currentPage }) => {
                     <UserTable
                         className="h-[45vh] overflow-y-auto"
                         users={users || []} />
-                    <Pagination page={currentPage} totalRecords={meta.totalRecords} onPageChange={handlePageChange} totalPage={meta.totalPages} />
 
+                    {
+                        users.length !== 0 &&
+                        <Pagination page={currentPage} totalRecords={meta.totalRecords} onPageChange={handlePageChange} totalPage={meta.totalPages} />
+                    }
                 </CardContent>
             </Card>
 

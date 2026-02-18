@@ -7,6 +7,8 @@ export interface IUser extends Document {
   role: string;
   phone: string;
   gender: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpires?: Date | null;
 }
 
 const UserSchema: Schema<IUser> = new Schema<IUser>(
@@ -18,6 +20,8 @@ const UserSchema: Schema<IUser> = new Schema<IUser>(
     role: { type: String, required: true, default: "member" },
     phone: { type: String, required: false, default: null },
     gender: { type: String, required: false, default: null },
+    resetPasswordToken: { type: String, required: false, default: null },
+    resetPasswordExpires: { type: Date, required: false, default: null },
   },
   {
     timestamps: true,

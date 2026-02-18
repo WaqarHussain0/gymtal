@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import Row from "./Row";
 
 const navigation = [
     { name: "Dashboard", href: PAGE_ROUTES.dashboard, icon: LayoutDashboard },
@@ -24,10 +27,20 @@ interface INavbar {
 const Navbar: React.FC<INavbar> = ({ className }) => {
     const pathname = usePathname();
 
+    const router = useRouter();
 
-    const handleLogout = () => {
-        console.log("Logout");
-    }
+    // Get the user session on the server
+    const session = useSession();
+    const user = session.data?.user;
+
+    const handleLogout = async () => {
+        // Sign out from NextAuth and redirect to login
+        await signOut({ redirect: false });
+        router.push(PAGE_ROUTES.login);
+    };
+
+
+
 
     return (<div className={`bg-blue-900 text-white ${className}`}>
         <div className="flex flex-col h-full space-y-3">
@@ -65,13 +78,26 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
 
             {/* Logout */}
             <div className="px-4 py-4 border-t border-blue-800">
-                <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-white/5 hover:text-white transition-colors w-full"
-                >
-                    <LogOut className="w-5 h-5" />
-                    <span>Logout</span>
-                </button>
+
+                <Row className="gap-1">
+                    <div className="capitalize size-9 bg-blue-800 shadow-sm rounded-full flex justify-center items-center">
+                        {user?.name?.slice(0, 1)}
+                    </div>
+
+
+                    <h2 className="capitalize">{user?.name}</h2>
+                </Row>
+
+                {user && (
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-white/5 hover:text-white transition-colors w-full"
+                    >
+                        <LogOut className="w-5 h-5" />
+                        <span>Logout</span>
+                    </button>
+                )}
+
             </div>
         </div>
     </div>
