@@ -1,79 +1,37 @@
+import { CreateMemberDto } from "@/backend/modules/member/dto/create-member.dto";
+import { MemberService } from "@/backend/modules/member/member.service";
+import { validateDto } from "@/backend/utils/input-validator.util";
 import { NextRequest, NextResponse } from "next/server";
+import "reflect-metadata";
 
-export async function GET(req: NextRequest) {
+const memberService = new MemberService();
+
+
+
+export async function POST(req: NextRequest) {
     try {
+        // Parse JSON body
+        const body = await req.json();
 
-        const dummyMembers = [
-            {
-                _id: "1",
-                name: "Basic",
-                email: "john.doe@example.com",
-                phone: "1234567890",
-                plan: {
-                    _id: "1",
-                    name: "Basic",
-                }
-                
-            },
-           {
-            _id: "2",
-            name: "Jane Doe",
-            email: "jane.doe@example.com",
-            phone: "1234567890",
-            plan: {
-                _id: "1",
-                name: "Premium",
-            }
-           },
-           {
-            _id: "3",
-            name: "Jim Beam",
-            email: "jim.beam@example.com",
-            phone: "1234567890",    
-            plan: {
-                _id: "1",
-                name: "Pro",
-            }
-           },
-           {
-            _id: "4",
-            name: "John Doe",
-            email: "john.doe@example.com",
-            phone: "1234567890",
-            plan: {
-                _id: "1",
-                name: "Enterprise",
-            }
-           },
-           {
-            _id: "5",
-            name: "John Doe",
-            email: "john.doe@example.com",
-            phone: "1234567890",
-            plan: {
-                _id: "1",
-                name: "Gold",
-            }
-           },
-           {
-            _id: "6",
-            name: "John Doe",
-            email: "john.doe@example.com",
-            phone: "1234567890",
-            plan: {
-                _id: "1",
-                name: "Gold",
-            }
-           },
-          
-          
-        ];
-        return NextResponse.json({ members: dummyMembers }, { status: 200 });
+
+
+        // Transform to DTO and validate
+        const dto = await validateDto(CreateMemberDto, body);
+
+        // Create user using the service
+        const member = await memberService.createMember(dto);
+
+        // Return success response
+        return NextResponse.json({ member }, { status: 201 });
     } catch (err: any) {
-        console.error("Error fetching users:", err);
+        // Handle validation errors or service errors
+        console.error("Error creating member:", err);
         return NextResponse.json(
             { error: err.message || "Something went wrong" },
             { status: 400 }
         );
     }
 }
+
+
+

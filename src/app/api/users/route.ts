@@ -33,17 +33,4 @@ export async function POST(req: NextRequest) {
 }
 
 
-export async function GET(req: NextRequest) {
-    try {
-        const users = await userService.findAll();
 
-      
-        return NextResponse.json({ users: users }, { status: 200 });
-    } catch (err: any) {
-        console.error("Error fetching users:", err);
-        return NextResponse.json(
-            { error: err.message || "Something went wrong" },
-            { status: 400 }
-        );
-    }
-}

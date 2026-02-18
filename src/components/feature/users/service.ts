@@ -21,3 +21,4 @@ export const updateUserService = async (id: string, payload: any) => {
         body: JSON.stringify(payload),
     });
 }
+

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import UserEntity from "@/backend/modules/user/entity/user.entity";
-import PlanEntity from "@/backend/modules/plan/entity/plan.entity";
+import MemberEntity from "@/backend/modules/member/entity/member.entity";
 
 
 const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URI||"mongodb://localhost:27017/gymtal";
@@ -21,8 +21,7 @@ if (!cached) {
 // All your models go here
 const models = {
   User: UserEntity,
-  Plan: PlanEntity,
-  // Class: ClassEntity,
+  Member: MemberEntity,
 };
 
 async function connectToDB() {

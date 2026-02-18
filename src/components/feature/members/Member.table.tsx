@@ -1,82 +1,220 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
-import { useMemo, } from "react";
-
+import { useRouter } from "next/navigation";
+import { deleteMemberService } from "./service";
+import MemberDialog from "./Member.dialog";
+import { Badge } from "@/components/ui/badge";
 
 interface IMemberTable {
-    members: any[]
+  members: any[];
+  className?: string;
 }
-const MemberTable: React.FC<IMemberTable> = ({ members }) => {
+const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
 
+  console.log(members,'!!!!!!!!!!!!!!!!')
+  const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<any | null>(null);
 
-    const columns = useMemo(() => [{
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const columns = useMemo(
+    () => [
+      {
         label: "Name",
-    },
-    {
+      },
+      {
         label: "Email",
-    },
+      },
 
-    {
+      {
+        label: "Fee Paid",
+      },
+
+      {
+        label: "Enrolled Date",
+      },
+
+      {
+        label: "Expiry Date",
+      },
+
+      {
         label: "Phone",
-    },
+      },
 
-    {
-        label: "Membership Plan",
-    },
-
-    {
+      {
         label: "Actions",
-    }], [])
-    return (
+      },
+    ],
+    [],
+  );
 
-        <Card>
-            <CardHeader>
-                <CardTitle>Users</CardTitle>
-            </CardHeader>
-            <CardContent>
+  const getActions = (member: any) => {
+    return [
+      {
+        label: "Edit",
+        onClick: () => {
+          setSelectedMember(member);
+          setIsEditModalOpen(true);
+        },
+        separatorAfter: false,
+        show: true,
+        icon: Edit,
+      },
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            {columns
-                                .map((column) => (
-                                    <TableHead key={column.label}>{column.label}</TableHead>
-                                ))}
-                        </TableRow>
-                    </TableHeader>
+      {
+        label: "Delete",
+        onClick: () => {
+          setIsDeleteModalOpen(true);
+          setSelectedMember(member);
+        },
+        show: true,
+        separatorAfter: false,
+        icon: Trash,
+      },
+    ];
+  };
 
+  const handleDelete = async (member: any) => {
+    if (!member._id) return;
+    const res = await deleteMemberService(member._id);
+    if (res.ok) {
+      toast.success("Member deleted successfully");
+      router.refresh();
+      setIsDeleteModalOpen(false);
+      setSelectedMember(null);
+    } else {
+      toast.error("Failed to delete member");
+    }
+  };
 
-                    <TableBody>
-                        {members.length > 0 ? (
-                            members.map((member ) => (
-                                <TableRow key={member   ._id}>
-                                    <TableCell>{member?.name}</TableCell>
-                                    <TableCell>{member?.email}</TableCell>
-                                    <TableCell>{member?.phone}</TableCell>
-                                    <TableCell>{member?.plan?.name}</TableCell>
-                                    
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">No results.</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+  return (
+    <div className={className}>
 
-    );
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((column) => (
+              <TableHead key={column.label}>{column.label}</TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {members.length > 0 ? (
+            members.map((member) => (
+              <TableRow key={member._id}>
+                <TableCell className="capitalize">{member?.userId?.name}</TableCell>
+                <TableCell>{member?.userId?.email}</TableCell>
+                <TableCell>{member?.feePaid}</TableCell>
+                <TableCell>{member?.enrolledDate}</TableCell>
+                <TableCell>
+                  <Badge variant={"destructive"}>{member?.expiryDate}</Badge>
+                </TableCell>
+                <TableCell>{member?.userId?.phone}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {getActions(member)
+                        ?.filter((action) => action.show)
+                        .map((action) => (
+                          <div key={action.label}>
+                            <DropdownMenuItem onClick={action.onClick}>
+                              {action.icon && (
+                                <action.icon className="mr-2 size-4" />
+                              )}
+                              {action.label}
+                            </DropdownMenuItem>
+                            {action.separatorAfter && (
+                              <DropdownMenuSeparator />
+                            )}
+                          </div>
+                        ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center"
+              >
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Delete Modal */}
+      <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="capitalize">
+              Delete {selectedMember?.name}
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            Are you sure you want to delete this member?
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => handleDelete(selectedMember)}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Edit Modal */}
+
+      <MemberDialog
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        member={selectedMember}
+      />
+    </div>
+  );
 };
 
 export default MemberTable;

@@ -4,8 +4,6 @@ import PAGE_ROUTES from "@/constants/page-routes.constant";
 import {
     LayoutDashboard,
     Users,
-    CreditCard,
-
     LogOut,
     Dumbbell,
 } from "lucide-react";
@@ -14,7 +12,6 @@ import { usePathname } from "next/navigation";
 
 const navigation = [
     { name: "Dashboard", href: PAGE_ROUTES.dashboard, icon: LayoutDashboard },
-    { name: "Plans", href: PAGE_ROUTES.plans, icon: CreditCard },
     { name: "Members", href: PAGE_ROUTES.members, icon: Users },
     { name: "Gym Staff", href: PAGE_ROUTES.users, icon: Users },
 ];
