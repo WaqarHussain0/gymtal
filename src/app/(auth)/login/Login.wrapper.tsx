@@ -9,19 +9,20 @@ import { useRouter } from "next/navigation";
 import Row from "@/components/common/Row";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
 interface ILoginRequest {
     email: string;
     password: string;
- 
+
 }
 
 const LoginWrapper = () => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const {
         control,
@@ -31,6 +32,8 @@ const LoginWrapper = () => {
 
 
     const onSubmit = async (data: ILoginRequest) => {
+
+        setLoading(true);
 
         const res = await signIn("credentials", {
             redirect: false,
@@ -43,6 +46,7 @@ const LoginWrapper = () => {
             toast.error("Login Failed", {
                 description: res.error, // ✅ show backend message directly
             });
+            setLoading(false);
             return;
         }
 
@@ -55,7 +59,7 @@ const LoginWrapper = () => {
 
         router.push(PAGE_ROUTES.dashboard);
 
-
+        setLoading(false);
 
 
 
@@ -116,21 +120,23 @@ const LoginWrapper = () => {
                     )}
                 />
 
-<Row className="w-full justify-between items-center">
+                <Row className="w-full justify-between items-center">
 
 
-                <Row className="justify-between mt-2">
-                    <TextElement
-                        as="a"
-                        onClick={() => router.push(PAGE_ROUTES.forgotPassword)}
-                        className="cursor-pointer underline"
-                    >
-                        Forgot password
-                    </TextElement>
+                    <Row className="justify-between mt-2">
+                        <TextElement
+                            as="a"
+                            onClick={() => router.push(PAGE_ROUTES.forgotPassword)}
+                            className="cursor-pointer underline"
+                        >
+                            Forgot password
+                        </TextElement>
+                    </Row>
+
+                    <Button type="submit" disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
+                    </Button>
                 </Row>
-
-                <Button type="submit">Login</Button>
-</Row>
             </form>
         </div>
     );

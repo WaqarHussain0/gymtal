@@ -12,6 +12,17 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Row from "./Row";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "../ui/alert-dialog";
+import { useState } from "react";
 
 const navigation = [
     { name: "Dashboard", href: PAGE_ROUTES.dashboard, icon: LayoutDashboard },
@@ -32,6 +43,9 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
     // Get the user session on the server
     const session = useSession();
     const user = session.data?.user;
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
 
     const handleLogout = async () => {
         // Sign out from NextAuth and redirect to login
@@ -90,7 +104,7 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
 
                 {user && (
                     <button
-                        onClick={handleLogout}
+                        onClick={() => setIsDeleteModalOpen(true)}
                         className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-white/5 hover:text-white transition-colors w-full"
                     >
                         <LogOut className="w-5 h-5" />
@@ -100,6 +114,30 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
 
             </div>
         </div>
+
+
+        {/* Delete Modal */}
+        <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="capitalize">
+                        Logout
+                    </AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription>
+                    Are you sure you want to logout?
+                </AlertDialogDescription>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                        className="bg-destructive hover:bg-destructive/90"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
 
 
