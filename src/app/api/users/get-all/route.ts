@@ -1,14 +1,14 @@
+import { UserService } from "@/backend/modules/user/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
-import { UserService } from "@/backend/modules/user/user.service";
 
 const userService = new UserService();
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { search, page, limit } = body;
+    const { search, page, limit ,role} = body;
 
-    const result = await userService.findAll({ search, page, limit });
+    const result = await userService.findAll({ search, page, limit, role });
 
     return NextResponse.json(result, { status: 200 });
   } catch (err: any) {

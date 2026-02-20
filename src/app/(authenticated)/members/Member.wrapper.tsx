@@ -1,37 +1,36 @@
 "use client";
 import { useCallback, useState } from "react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { CustomBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import Row from "@/components/common/Row";
 import MemberTable from "@/components/feature/members/Member.table";
-import MemberDialog from "@/components/feature/members/Member.dialog";
 import { Button } from "@/components/ui/button";
 import PAGE_ROUTES from "@/constants/page-routes.constant";
 import { PlusIcon, Search } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useDebouncedSearch } from "@/hooks/useDebouncedSearch.hook";
-import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
+import Pagination from "@/components/common/Pagination";
 
 interface IMemberWrapper {
     members: any[];
-    currentPage: number;
     meta: {
         totalPages: number;
         totalRecords: number;
         page: number;
     };
+    currentPage: number;
 }
 
-const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta }) => {
-    const router = useRouter();
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-
+const MemberWrapper: React.FC<IMemberWrapper> = ({ members, meta, currentPage }) => {
 
     const { searchInput, debouncedSearch, handleSearchChange } =
         useDebouncedSearch();
+    const router = useRouter();
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 
     // Function to update URL query params
@@ -40,7 +39,7 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
             const params = new URLSearchParams();
             if (page) params.set("page", page.toString());
             if (search) params.set("search", search);
-            router.replace(`${PAGE_ROUTES.members}?${params.toString()}`);
+            router.replace(`${PAGE_ROUTES.users}?${params.toString()}`);
         },
         [router]
     );
@@ -49,12 +48,12 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
         updateQueryParams(newPage, debouncedSearch);
     };
 
+
     const handleSearch = useCallback(
         (value: string) => {
             handleSearchChange(value);
             updateQueryParams(1, value);
         }, [handleSearchChange, updateQueryParams])
-
 
     return (
         <div className="w-full space-y-3">
@@ -63,7 +62,7 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
                     <h1 className="text-2xl font-bold">Members</h1>
                     <p>Manage your gym members</p>
                 </Row>
-                <Button onClick={() => setIsDialogOpen(true)}>
+                <Button onClick={() => router.push(PAGE_ROUTES.createMember)}>
                     <PlusIcon className="size-4" />
                     Add Member
                 </Button>
@@ -76,13 +75,10 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
             />
 
             <Card className="gap-3">
+
                 <CardHeader>
                     <CardTitle>Gym Members</CardTitle>
-
-
                 </CardHeader>
-
-
 
                 <CardContent className="space-y-3">
                     <div className="relative">
@@ -100,17 +96,20 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, currentPage, meta })
                             />
                         </form>
                     </div>
+
                     <MemberTable
                         className="h-[45vh] overflow-y-auto"
-                        members={members || []} />
-  {
-                        members.length !== 0 &&
-                    <Pagination page={currentPage} totalRecords={meta.totalRecords} onPageChange={handlePageChange} totalPage={meta.totalPages} />
-}
-                </CardContent>
-            </Card>
 
-            <MemberDialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)} />
+                        members={members || []} />
+
+                    {
+                        members.length !== 0 &&
+                        <Pagination page={currentPage} totalRecords={meta.totalRecords} onPageChange={handlePageChange} totalPage={meta.totalPages} />
+                    }
+
+                </CardContent>
+
+            </Card>
         </div>
     );
 };

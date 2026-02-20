@@ -40,9 +40,9 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
 
     const router = useRouter();
 
-    // Get the user session on the server
-    const session = useSession();
-    const user = session.data?.user;
+    // Get the user session
+    const { data: session } = useSession();
+    const user = session?.user;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -102,15 +102,13 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
                     <h2 className="capitalize">{user?.name}</h2>
                 </Row>
 
-                {user && (
-                    <button
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-white/5 hover:text-white transition-colors w-full"
-                    >
-                        <LogOut className="w-5 h-5" />
-                        <span>Logout</span>
-                    </button>
-                )}
+                <button
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-100 hover:bg-white/5 hover:text-white transition-colors w-full"
+                >
+                    <LogOut className="w-5 h-5" />
+                    <span>Logout</span>
+                </button>
 
             </div>
         </div>

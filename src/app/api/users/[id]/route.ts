@@ -1,4 +1,4 @@
-import { UserService } from "@/backend/modules/user/user.service";
+import { UserService } from "@/backend/modules/user/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
 
 import "reflect-metadata";

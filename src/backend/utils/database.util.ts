@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import UserEntity from "@/backend/modules/user/entity/user.entity";
-import MemberEntity from "@/backend/modules/member/entity/member.entity";
+import MembershipPeriodEntity from "../modules/membership-period/entity/MembershipPeriod.entity";
+import PaymentTransactionEntity from "../modules/payment-transaction/entity/PaymentTransaction.entity";
 
 
 const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URI||"mongodb://localhost:27017/gymtal";
@@ -21,7 +22,8 @@ if (!cached) {
 // All your models go here
 const models = {
   User: UserEntity,
-  Member: MemberEntity,
+  MembershipPeriod: MembershipPeriodEntity,
+  PaymentTransaction: PaymentTransactionEntity,
 };
 
 async function connectToDB() {

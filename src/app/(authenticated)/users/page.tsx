@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import UserWrapper from "./User.wrapper";
 import PAGE_ROUTES from "@/constants/page-routes.constant";
+import { UserRoleEnum } from "@/backend/modules/user/entity/user.entity";
 
 
 type SearchParams = Promise<{
@@ -20,6 +21,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
             page: Number(page),
             limit: 5,
             search: search || "",
+            
         }),
     });
 

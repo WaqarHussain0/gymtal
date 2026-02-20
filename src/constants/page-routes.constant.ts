@@ -9,7 +9,9 @@ const PAGE_ROUTES = {
     dashboard: "/dashboard",
     users: "/users",
     members: "/members",
-    plans: "/plans",  
+    createMember: "/members/create",
+    viewMember: (id: string) => `/members/view?id=${id}`,
+    plans: "/plans",
 }
 
 export default PAGE_ROUTES;

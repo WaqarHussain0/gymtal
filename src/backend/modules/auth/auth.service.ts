@@ -1,18 +1,18 @@
-import { UserService } from "../user/user.service";
+import { UserService } from "../user/services/user.service";
 import { LoginDto } from "./dto/login.dto";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
+const userService = new UserService();
 export class AuthService {
 
 
-    private readonly userService = new UserService();
 
     async login(payload: LoginDto) {
 
         const { email, password } = payload;
 
-        const user = await this.userService.findByEmail(email);
+        const user = await userService.findByEmail(email);
 
         if (!user) {
             throw new Error("Invalid email or password");
@@ -29,7 +29,7 @@ export class AuthService {
 
 
     async forgotPassword(email: string) {
-        const user = await this.userService.findByEmail(email);
+        const user = await userService.findByEmail(email);
 
         if (!user) {
             throw new Error("Please enter a valid email address");
@@ -47,14 +47,14 @@ export class AuthService {
 
 
         // Delete existing reset token (if exists)
-        await this.userService.update(user._id, {
+        await userService.update(user._id, {
             resetPasswordToken: null,
             resetPasswordExpires: null,
         });
 
 
         // Save new token + expiry (15 minutes)
-        await this.userService.update(user._id, {
+        await userService.update(user._id, {
             resetPasswordToken: hashedToken,
             resetPasswordExpires: new Date(Date.now() + 15 * 60 * 1000),
         });
@@ -73,24 +73,20 @@ export class AuthService {
             .update(token)
             .digest("hex");
 
-        console.log(token, "token");
-        const user = await this.userService.findByResetPasswordToken(hashedToken);
+        const user = await userService.findByResetPasswordToken(hashedToken);
 
-        console.log(user, "user");
 
         if (!user) {
             throw new Error("Invalid or expired token");
         }
 
-        console.log(user.resetPasswordExpires);
-        console.log(new Date());
 
         if (user.resetPasswordExpires && user.resetPasswordExpires < new Date()) {
             throw new Error("Token expired");
         }
 
 
-        await this.userService.update(user._id, {
+        await userService.update(user._id, {
             password,
             resetPasswordToken: null,
             resetPasswordExpires: null,

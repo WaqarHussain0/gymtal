@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { UserService } from "@/backend/modules/user/user.service";
 import { CreateUserDto } from "@/backend/modules/user/dto/create-user.dto";
 import { validateDto } from "@/backend/utils/input-validator.util";
 
 import "reflect-metadata";
+import { UserService } from "@/backend/modules/user/services/user.service";
 
 const userService = new UserService();
 

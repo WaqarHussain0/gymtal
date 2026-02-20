@@ -48,7 +48,6 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
     handleSubmit,
     control,
     reset,
-
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -81,15 +80,20 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
   const onSubmit = async (data: FormValues) => {
     let response: any;
 
+
+    const { password, ...rest } = data;
+
     const payload = {
-      ...data,
+      ...rest,
       name: data.name.trim().toLowerCase(),
       email: data.email.trim().toLowerCase(),
-    }
+    };
     if (user && user?._id) {
+      // Update existing user without touching password
       response = await updateUserService(user?._id, payload);
     } else {
-      response = await createUserService(payload);
+      // For creation, include password if it's in the data
+      response = await createUserService({ ...payload, password });
     }
 
     if (response.ok) {

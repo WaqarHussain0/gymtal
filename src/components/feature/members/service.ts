@@ -7,7 +7,7 @@ export const deleteMemberService = async (id: string) => {
 
 export const createMemberService = async (payload: any) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    return await fetch(`${baseUrl}/api/members`, {
+    return await fetch(`${baseUrl}/api/users/gym-member`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: { 'Content-Type': 'application/json' },

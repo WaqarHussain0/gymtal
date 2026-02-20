@@ -26,14 +26,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { useRouter } from "next/navigation";
 import { deleteMemberService } from "./service";
-import MemberDialog from "./Member.dialog";
-import { Badge } from "@/components/ui/badge";
+import PAGE_ROUTES from "@/constants/page-routes.constant";
 
 interface IMemberTable {
   members: any[];
@@ -45,7 +44,6 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const columns = useMemo(
     () => [
       {
@@ -56,16 +54,10 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
       },
 
       {
-        label: "Fee Paid",
-      },
-
-      {
         label: "Enrolled Date",
       },
 
-      {
-        label: "Expiry Date",
-      },
+
 
       {
         label: "Phone",
@@ -81,15 +73,15 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
   const getActions = (member: any) => {
     return [
       {
-        label: "Edit",
+        label: "View",
         onClick: () => {
-          setSelectedMember(member);
-          setIsEditModalOpen(true);
+          router.push(PAGE_ROUTES.viewMember(member._id));
         },
         separatorAfter: false,
         show: true,
-        icon: Edit,
+        icon: Eye,
       },
+
 
       {
         label: "Delete",
@@ -133,14 +125,11 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
           {members.length > 0 ? (
             members.map((member) => (
               <TableRow key={member._id}>
-                <TableCell className="capitalize">{member?.userId?.name}</TableCell>
-                <TableCell>{member?.userId?.email}</TableCell>
-                <TableCell>{member?.feePaid}</TableCell>
-                <TableCell>{member?.enrolledDate}</TableCell>
-                <TableCell>
-                  <Badge variant={"destructive"}>{member?.expiryDate}</Badge>
-                </TableCell>
-                <TableCell>{member?.userId?.phone}</TableCell>
+                <TableCell className="capitalize">{member?.name}</TableCell>
+                <TableCell>{member?.email}</TableCell>
+                <TableCell>{member?.createdAt}</TableCell>
+
+                <TableCell>{member?.phone || "N/A"}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -205,13 +194,7 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit Modal */}
 
-      <MemberDialog
-        open={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        member={selectedMember}
-      />
     </div>
   );
 };

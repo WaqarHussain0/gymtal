@@ -1,6 +1,6 @@
 import PAGE_ROUTES from "@/constants/page-routes.constant";
 import { ILoginResponse, IUser } from "@/types/user.type";
-
+import jwt from "jsonwebtoken";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -63,24 +63,54 @@ export const authOptions: NextAuthOptions = {
         },
 
         async jwt({ token, user }) {
+            // Initial login
             if (user) {
-                const customUser = user as IUser & {
-                    accessToken?: string;
-                };
-
-                token.user = {
-                    id: customUser.id,
-                    email: customUser.email!,
-                    name: customUser.name,
-                    role: customUser.role,
-                };
-
-                token.accessToken = customUser.accessToken ?? null;
+              const customUser = user as IUser & {
+                accessToken?: string;
+              };
+          
+              const decoded = customUser.accessToken
+                ? (jwt.decode(customUser.accessToken) as { exp?: number } | null)
+                : null;
+          
+              token.user = {
+                id: customUser.id,
+                email: customUser.email!,
+                name: customUser.name,
+                role: customUser.role,
+              };
+          
+              token.accessToken = customUser.accessToken ?? null;
+          
+              token.accessTokenExpires = decoded?.exp
+                ? decoded.exp * 1000
+                : Date.now() + 3600 * 1000;
+          
+              return token;
             }
+          
+            if (
+              token.accessTokenExpires &&
+              Date.now() > (token.accessTokenExpires as number)
+            ) {
+              return {
+                ...token,
+                accessToken: null,
+                user: null,
+              };
+            }
+          
             return token;
-        },
+          }
+        
+,          
 
         async session({ session, token }) {
+
+            if (!token?.accessToken) {
+                return null; // forces logout cleanly
+              }
+
             session.user = token.user as IUser;
             session.accessToken = token.accessToken as string;
             return session;
