@@ -4,8 +4,7 @@ import MembershipPeriodEntity from "../modules/membership-period/entity/Membersh
 import PaymentTransactionEntity from "../modules/payment-transaction/entity/PaymentTransaction.entity";
 
 
-// const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URI||"mongodb://localhost:27017/gymtal";
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/gymtal";
+const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URI||"mongodb://localhost:27017/gymtal";
 
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable inside .env");
@@ -27,12 +26,11 @@ const models = {
   PaymentTransaction: PaymentTransactionEntity,
 };
 
-async function connectToDB(mongodbUri?: string) {
+async function connectToDB() {
   if (cached.conn) return cached.conn;
 
-  const dbURL = mongodbUri || MONGODB_URI;
   if (!cached.promise) {
-    cached.promise = mongoose.connect(dbURL).then(async (mongooseInstance) => {
+    cached.promise = mongoose.connect(MONGODB_URI).then(async (mongooseInstance) => {
       console.log("MongoDB connected ✅");
 
       // Sync indexes for all models

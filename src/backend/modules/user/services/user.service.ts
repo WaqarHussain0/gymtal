@@ -114,6 +114,10 @@ export class UserService {
     limit?: number;
     role?: UserRoleEnum;
   }) {
+    await connectToDB()
+
+
+
     // If role is provided, use it; otherwise default to non-member
     const query: Record<string, any> = role
       ? { role } // specific role from payload
@@ -152,7 +156,7 @@ export class UserService {
     // MembershipPeriods and PaymentTransactions are handled in their respective services
 
     return deletedUser;
-  } 
+  }
 
   async update(
     id: string,
