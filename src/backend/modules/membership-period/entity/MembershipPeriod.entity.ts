@@ -17,19 +17,16 @@ const MembershipPeriodSchema: Schema<IMembershipPeriod> = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
-            index: true,
         },
 
         startDate: {
             type: Date,
             required: true,
-            index: true,
         },
 
         endDate: {
             type: Date,
             required: true,
-            index: true,
         },
 
 

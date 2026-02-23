@@ -58,7 +58,6 @@ const PaymentTransactionSchema: Schema<IPaymentTransaction> = new Schema(
     { timestamps: true }
 );
 
-PaymentTransactionSchema.index({ paymentDate: 1 });
 
 // 👇 Enable plugin
 PaymentTransactionSchema.plugin(autopopulate);
