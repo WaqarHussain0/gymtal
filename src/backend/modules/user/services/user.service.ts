@@ -1,12 +1,15 @@
+import connectToDB from "@/backend/utils/database.util";
 import { CreateUserDto } from "../dto/create-user.dto";
 import UserEntity, { UserRoleEnum } from "../entity/user.entity";
 import bcrypt from "bcryptjs";
 
 export class UserService {
+
   private readonly userEntity = UserEntity;
 
 
   async findById(id: string) {
+    await connectToDB()
     const user = await this.userEntity
       .findById(id)
       .populate({
@@ -37,6 +40,7 @@ export class UserService {
 
   // Find a user by email
   async findByEmail(email: string) {
+    await connectToDB()
     return await this.userEntity.findOne({
       email: email?.trim()?.toLowerCase(),
     });
@@ -45,7 +49,7 @@ export class UserService {
   // Create a new user (admin/staff/member)
   async createUser(payload: CreateUserDto) {
     const { name, email, password, role, phone, gender } = payload;
-
+    await connectToDB()
     const existingUser = await this.findByEmail(email);
     if (existingUser) {
       throw new Error(
@@ -73,7 +77,7 @@ export class UserService {
   // Update a user
   async updateUser(id: string, payload: Partial<CreateUserDto>) {
     const { name, email, role, phone, gender } = payload;
-
+    await connectToDB()
     if (email) {
       const existingUser = await this.findByEmail(email);
       if (existingUser && existingUser._id.toString() !== id) {
@@ -114,7 +118,7 @@ export class UserService {
     const query: Record<string, any> = role
       ? { role } // specific role from payload
       : { role: { $ne: UserRoleEnum.MEMBER } }; // default: non-members
-
+    await connectToDB()
     if (search) {
       query["$or"] = [
         { name: { $regex: search, $options: "i" } },
@@ -138,6 +142,7 @@ export class UserService {
 
   // Delete a user
   async deleteUser(id: string) {
+    await connectToDB()
     const deletedUser = await this.userEntity.findByIdAndDelete(id);
 
     if (!deletedUser) {
@@ -148,7 +153,7 @@ export class UserService {
     // MembershipPeriods and PaymentTransactions are handled in their respective services
 
     return deletedUser;
-  }
+  } 
 
   async update(
     id: string,
@@ -163,6 +168,7 @@ export class UserService {
       resetPasswordExpires: Date | null;
     }>,
   ) {
+    await connectToDB()
     const updateData: any = { ...payload }; // Normalize email if provided
 
     // Normalize email if provided
@@ -187,6 +193,7 @@ export class UserService {
   }
   // Find user by reset password token
   async findByResetPasswordToken(token: string) {
+    await connectToDB()
     return await this.userEntity.findOne({ resetPasswordToken: token });
   }
 }
