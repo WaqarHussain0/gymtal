@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
             role: user.role || "",
         };
 
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1m" });
+        // const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
         // Return only necessary user details + token
         const userData = {

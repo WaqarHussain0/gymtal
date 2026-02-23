@@ -20,8 +20,10 @@ export default withAuth(
     callbacks: {
       authorized: ({ token }) => {
         try {
-
-          return !!token;
+          if (!token || !token.accessToken) {
+            return false;
+          }
+          return true;
         } catch (err) {
           console.error("❌ Authorization callback error:", err);
           return false;

@@ -106,7 +106,7 @@ const LoginWrapper = () => {
                             />
                             <button
                                 type="button"
-                                className="absolute right-2 top-2 text-gray-400"
+                                className="absolute cursor-pointer right-2 top-2 text-gray-400"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

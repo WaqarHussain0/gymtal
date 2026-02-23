@@ -125,7 +125,6 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
             createdByUserId: user?.id,
         };
 
-        console.log(payload, 'payload : payload!!!!!!!!!!!!!!!!!11');
 
         if (member && member._id) {
             response = await updateMemberService(member._id, payload);
