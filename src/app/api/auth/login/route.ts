@@ -9,7 +9,6 @@ import jwt from "jsonwebtoken";
 
 const authService = new AuthService();
 
-const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET || "your_super_secret"; // store securely in env
 
 export async function POST(req: NextRequest) {
     try {
@@ -27,8 +26,16 @@ export async function POST(req: NextRequest) {
             role: user.role || "",
         };
 
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: process.env.NEXT_PUBLIC_JWT_EXPIRE_IN || "1h" });
-        // const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
+        // Get JWT secret from env
+        const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET || "your_super_secret";
+        const JWT_EXPIRY_HOURS = Number(process.env.NEXT_PUBLIC_JWT_EXPIRY_HOURS || "1");
+
+
+        // Convert hours to seconds
+        const expiresInSeconds = JWT_EXPIRY_HOURS * 60 * 60;
+
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: expiresInSeconds });
 
         // Return only necessary user details + token
         const userData = {
