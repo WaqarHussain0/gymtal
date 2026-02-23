@@ -2,6 +2,7 @@ import connectToDB from "@/backend/utils/database.util";
 import { CreateUserDto } from "../dto/create-user.dto";
 import UserEntity, { UserRoleEnum } from "../entity/user.entity";
 import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 export class UserService {
 
@@ -159,7 +160,7 @@ export class UserService {
   }
 
   async update(
-    id: string,
+    id: mongoose.Types.ObjectId,
     payload: Partial<{
       name: string;
       email: string;

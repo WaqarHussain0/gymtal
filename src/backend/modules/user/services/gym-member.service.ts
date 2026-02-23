@@ -3,6 +3,7 @@ import { PaymentTransactionService } from "../../payment-transaction/payment-tra
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UserRoleEnum } from "../entity/user.entity";
 import { UserService } from "./user.service";
+import mongoose from "mongoose";
 
 const userService = new UserService();
 const membershipService = new MembershipPeriodService();
@@ -26,7 +27,7 @@ export class GymMemberService {
         endDate.setMonth(startDate.getMonth() + 1);
 
         const membership = await membershipService.createMembershipPeriod({
-            userId: user._id.toString(),
+            userId: user._id,
             startDate,
             endDate,
             createdBy: adminId
@@ -34,8 +35,8 @@ export class GymMemberService {
 
         // 3️⃣ Create Payment Transaction
         await paymentService.createPayment({
-            userId: user._id.toString(),
-            membershipPeriodId: membership._id.toString(),
+            userId: user._id,
+            membershipPeriodId: membership._id,
             amount: feeAmount,
             paymentMethod: 'cash',
             receivedBy: adminId,
@@ -48,7 +49,7 @@ export class GymMemberService {
     // Renewal / next month payment
     // Renewal with explicit dates
     async renewMembership(
-        userId: string,
+        userId: mongoose.Types.ObjectId,
         startDateInput: Date | string,
         endDateInput: Date | string,
         amount: number,
@@ -77,7 +78,7 @@ export class GymMemberService {
         // 2️⃣ Create Payment Transaction
         await paymentService.createPayment({
             userId,
-            membershipPeriodId: newPeriod._id.toString(),
+            membershipPeriodId: newPeriod._id,
             amount,
             paymentMethod: "cash", // or pass from controller if needed
             receivedBy: adminId,

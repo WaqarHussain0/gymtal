@@ -1,14 +1,15 @@
 import { IsNotEmpty, IsString, IsNumber, IsDate } from "class-validator";
+import mongoose from "mongoose";
 
 
 export class CreatePaymentDto {
     @IsNotEmpty()
     @IsString()
-    userId!: string;
+    userId!: mongoose.Types.ObjectId;
 
     @IsNotEmpty()
     @IsString()
-    membershipPeriodId!: string;
+    membershipPeriodId!: mongoose.Types.ObjectId;
 
     @IsNotEmpty()
     @IsNumber()

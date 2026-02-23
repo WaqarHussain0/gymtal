@@ -47,14 +47,14 @@ export class AuthService {
 
 
         // Delete existing reset token (if exists)
-        await userService.update(user._id.toString(), {
+        await userService.update(user._id, {
             resetPasswordToken: null,
             resetPasswordExpires: null,
         });
 
 
         // Save new token + expiry (15 minutes)
-        await userService.update(user._id.toString(), {
+        await userService.update(user._id, {
             resetPasswordToken: hashedToken,
             resetPasswordExpires: new Date(Date.now() + 15 * 60 * 1000),
         });
@@ -86,7 +86,7 @@ export class AuthService {
         }
 
 
-        await userService.update(user._id.toString(), {
+        await userService.update(user._id, {
             password,
             resetPasswordToken: null,
             resetPasswordExpires: null,

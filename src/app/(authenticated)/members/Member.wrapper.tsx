@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -29,9 +29,6 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, meta, currentPage })
     const { searchInput, debouncedSearch, handleSearchChange } =
         useDebouncedSearch();
     const router = useRouter();
-
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
 
     // Function to update URL query params
     const updateQueryParams = useCallback(

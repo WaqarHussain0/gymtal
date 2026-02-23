@@ -1,4 +1,5 @@
 import { GymMemberService } from "@/backend/modules/user/services/gym-member.service";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 import "reflect-metadata";
@@ -16,7 +17,7 @@ export async function PUT(
     const { amount, endDate, startDate, createdById } = body;
 
     try {
-        const user = await gymMemberService.renewMembership(id, startDate, endDate, amount, createdById);
+        const user = await gymMemberService.renewMembership(new mongoose.Types.ObjectId(id), startDate, endDate, amount, createdById);
         return NextResponse.json({ user }, { status: 201 });
     }
     catch (err: any) {

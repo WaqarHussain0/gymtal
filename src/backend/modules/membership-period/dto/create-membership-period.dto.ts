@@ -1,8 +1,9 @@
 import { IsNotEmpty, IsDate, IsString } from "class-validator";
+import mongoose from "mongoose";
 
 export class CreateMembershipPeriodDto {
     @IsNotEmpty()
-    userId!: string;
+    userId!: mongoose.Types.ObjectId;
 
     @IsNotEmpty()
     @IsDate()
