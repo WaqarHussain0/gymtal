@@ -2,18 +2,19 @@ import PAGE_ROUTES from "@/constants/page-routes.constant";
 import MemberWrapper from "./Member.wrapper";
 import { redirect } from "next/navigation";
 import { UserRoleEnum } from "@/backend/modules/user/entity/user.entity";
+import { UserService } from "@/backend/modules/user/services/user.service";
 
 type SearchParams = Promise<{
     page?: string;
     search?: string;
 }>;
 
+const userService = new UserService();
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
 
     const { page = 1, search } = await searchParams;
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
     const payload = {
         page: Number(page),
@@ -22,15 +23,7 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
         role: UserRoleEnum.MEMBER,
     }
 
-
-    const res = await fetch(`${baseUrl}/api/users/get-all`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-
-
+    const data = await userService.findAll(payload);
 
 
     if (data.data.length !== 0 && data?.meta?.totalPages < Number(page) && !search) {

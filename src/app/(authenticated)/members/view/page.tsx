@@ -1,11 +1,13 @@
 import PAGE_ROUTES from "@/constants/page-routes.constant";
 import { redirect } from "next/navigation";
 import ViewGymMemberWrapper from "./ViewGymMember.wrapper";
+import { UserService } from "@/backend/modules/user/services/user.service";
 
 type SearchParams = Promise<{
     id: string;
 }>;
 
+const userService = new UserService();
 
 const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
 
@@ -15,26 +17,16 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
         redirect(PAGE_ROUTES.members);
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
+    const member = await userService.findById(id);
 
-    const member = await fetch(`${baseUrl}/api/users/gym-member/${id}`);
-
-    if (!member.ok) {
+    if (!member) {
         return (<p>Member not found</p>)
     }
 
-    const memberData = await member.json();
-
-
-
-
-    if (!memberData) {
-        redirect(PAGE_ROUTES.members);
-    }
 
     return (
-        <ViewGymMemberWrapper member={memberData.user} />
+        <ViewGymMemberWrapper member={member} />
     );
 };
 
