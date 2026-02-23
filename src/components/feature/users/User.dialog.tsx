@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -43,6 +43,8 @@ type FormValues = {
 
 const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -80,6 +82,7 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
   const onSubmit = async (data: FormValues) => {
     let response: any;
 
+    setIsLoading(true);
 
     const { password, ...rest } = data;
 
@@ -101,11 +104,13 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
       reset();
       toast.success("User saved successfully");
       router.refresh();
+      setIsLoading(false);
     } else {
       const error = await response.json();
       toast.error("Request failed", {
         description: error?.error || "Something went wrong",
       });
+      setIsLoading(false);
     }
   };
 
@@ -224,7 +229,7 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
             >
               Cancel
             </Button>
-            <Button type="submit">Save </Button>
+            <Button type="submit" disabled={isLoading}> {isLoading ? "Saving..." : "Save"}</Button>
           </div>
         </form>
       </DialogContent>

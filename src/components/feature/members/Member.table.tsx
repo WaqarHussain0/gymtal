@@ -124,10 +124,12 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
         <TableBody>
           {members.length > 0 ? (
             members.map((member) => (
-              <TableRow key={member._id}>
+              <TableRow key={member._id?.toString()}>
                 <TableCell className="capitalize">{member?.name}</TableCell>
                 <TableCell>{member?.email}</TableCell>
-                <TableCell>{member?.createdAt}</TableCell>
+                <TableCell>{member?.createdAt
+                  ? new Date(member.createdAt).toLocaleDateString()
+                  : "N/A"}</TableCell>
 
                 <TableCell>{member?.phone || "N/A"}</TableCell>
                 <TableCell>

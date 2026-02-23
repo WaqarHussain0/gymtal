@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,6 +35,7 @@ interface IPageProps {
 
 const MemberForm: React.FC<IPageProps> = ({ member }) => {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const { data: session } = useSession();
     const user = session?.user;
@@ -62,7 +63,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
             const latestPeriod = member.membershipPeriods?.[0];
             // Get the latest payment transaction
             const latestPayment = member.paymentTransactions?.[0];
-    
+
             reset({
                 name: member.name,
                 email: member.email,
@@ -75,10 +76,10 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                 expiryDate: latestPeriod
                     ? new Date(latestPeriod.endDate).toISOString().split("T")[0]
                     : new Date(
-                          new Date().setMonth(new Date().getMonth() + 1)
-                      )
-                          .toISOString()
-                          .split("T")[0],
+                        new Date().setMonth(new Date().getMonth() + 1)
+                    )
+                        .toISOString()
+                        .split("T")[0],
             });
         } else {
             const today = new Date().toISOString().split("T")[0];
@@ -87,7 +88,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
             )
                 .toISOString()
                 .split("T")[0];
-    
+
             reset({
                 name: "",
                 email: "",
@@ -102,6 +103,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
 
     const onSubmit = async (data: FormValues) => {
         let response: any;
+        setIsLoading(true);
 
         const payload = {
             user: {
@@ -138,11 +140,13 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                 description: "Member saved successfully",
             });
             router.push(PAGE_ROUTES.members);
+            setIsLoading(false);
         } else {
             const error = await response.json();
             toast.error("Request failed", {
                 description: error?.error || "Something went wrong",
             });
+            setIsLoading(false);
         }
     };
 
@@ -269,7 +273,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                     >
                         Cancel
                     </Button>
-                    <Button type="submit">{member ? "Update" : "Save"}</Button>
+                    <Button type="submit" disabled={isLoading}> {isLoading ? "Saving..." : member ? "Update" : "Save"}</Button>
                 </div>
             </form>
         </Card>

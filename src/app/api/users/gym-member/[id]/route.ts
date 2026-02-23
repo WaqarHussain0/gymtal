@@ -1,6 +1,7 @@
 
 import { UserService } from "@/backend/modules/user/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 import "reflect-metadata";
 
@@ -15,7 +16,7 @@ export async function GET(
 
     try {
         // Update user using the service
-        const user = await userService.findById(id);
+        const user = await userService.findById(new mongoose.Types.ObjectId(id));
 
         // Return success response
         return NextResponse.json({ user }, { status: 201 });

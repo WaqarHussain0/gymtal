@@ -1,6 +1,6 @@
 export const deleteMemberService = async (id: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    return await fetch(`${baseUrl}/api/members/${id}`, {
+    return await fetch(`${baseUrl}/api/users/${id}`, {
         method: "DELETE",
     });
 }

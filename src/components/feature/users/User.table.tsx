@@ -118,7 +118,7 @@ const UserTable: React.FC<IUserTable> = ({ users, className }) => {
         <TableBody>
           {users.length > 0 ? (
             users.map((user) => (
-              <TableRow key={user._id}>
+              <TableRow key={user._id?.toString()}>
                 <TableCell className="capitalize">{user?.name}</TableCell>
                 <TableCell>{user?.email}</TableCell>
                 <TableCell>

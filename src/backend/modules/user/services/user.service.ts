@@ -9,7 +9,7 @@ export class UserService {
   private readonly userEntity = UserEntity;
 
 
-  async findById(id: string) {
+  async findById(id: mongoose.Types.ObjectId) {
     await connectToDB()
     const user = await this.userEntity
       .findById(id)
@@ -28,7 +28,7 @@ export class UserService {
           path: "receivedBy",
           select: "name role", // optional
         },
-      });
+      }).lean();
 
     if (!user) {
       throw new Error(`User with id ${id} not found`);
@@ -117,12 +117,11 @@ export class UserService {
   }) {
     await connectToDB()
 
-
-
     // If role is provided, use it; otherwise default to non-member
     const query: Record<string, any> = role
       ? { role } // specific role from payload
       : { role: { $ne: UserRoleEnum.MEMBER } }; // default: non-members
+
     if (search) {
       query["$or"] = [
         { name: { $regex: search, $options: "i" } },

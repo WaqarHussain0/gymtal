@@ -32,16 +32,16 @@ const PaymentHistoryTable: React.FC<IPaymentHistoryTableProps> = ({ paymentTrans
                         </TableHeader>
                         <TableBody>
                             {paymentTransactions.map((txn: any) => (
-                                <TableRow key={txn._id}>
+                                <TableRow key={txn._id?.toString()}>
                                     <TableCell>{txn.amount}</TableCell>
                                     <TableCell>{txn.paymentMethod}</TableCell>
                                     <TableCell>
-                                        {membershipPeriods.find((p: any) => p._id === txn.membershipPeriodId)
+                                        {membershipPeriods.find((p: any) => p._id?.toString() === txn.membershipPeriodId?.toString())
                                             ? `${new Date(
-                                                membershipPeriods.find((p: any) => p._id === txn.membershipPeriodId)
+                                                membershipPeriods.find((p: any) => p._id?.toString() === txn.membershipPeriodId?.toString())
                                                     .startDate
                                             ).toLocaleDateString()} - ${new Date(
-                                                membershipPeriods.find((p: any) => p._id === txn.membershipPeriodId)
+                                                membershipPeriods.find((p: any) => p._id?.toString() === txn.membershipPeriodId?.toString())
                                                     .endDate
                                             ).toLocaleDateString()}`
                                             : "-"}

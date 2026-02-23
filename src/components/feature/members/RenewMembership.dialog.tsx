@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -37,6 +37,7 @@ const RenewMembershipDialog: React.FC<IRenewMembershipDialogProps> = ({
 }) => {
     const router = useRouter();
 
+    const [isLoading, setIsLoading] = useState(false);
     // Get the user session
     const session = useSession();
     const user = session?.data?.user;
@@ -86,7 +87,7 @@ const RenewMembershipDialog: React.FC<IRenewMembershipDialogProps> = ({
     /* ---------------------------------- */
     const onSubmit = async (data: FormValues) => {
 
-
+        setIsLoading(true);
         const payload = {
             userId,
             createdById: user?.id,
@@ -106,16 +107,21 @@ const RenewMembershipDialog: React.FC<IRenewMembershipDialogProps> = ({
             );
 
             if (!res.ok) {
+                setIsLoading(false);
                 throw new Error("Failed to renew membership");
             }
 
             toast.success("Membership renewed successfully 🎉");
 
             reset();
+            setIsLoading(false);
             onClose();
             router.refresh();
         } catch (error: any) {
+            setIsLoading(false);
             toast.error(error.message || "Something went wrong");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -180,8 +186,8 @@ const RenewMembershipDialog: React.FC<IRenewMembershipDialogProps> = ({
                         )}
                     </div>
 
-                    <Button type="submit" className="w-full">
-                        Confirm Renewal
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                        {isLoading ? "Confirming..." : "Confirm Renewal"}
                     </Button>
                 </form>
             </DialogContent>

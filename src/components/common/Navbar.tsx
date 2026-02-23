@@ -45,9 +45,11 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
     const user = session?.user;
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const handleLogout = async () => {
+        setIsLoading(true);
         // Sign out from NextAuth and redirect to login
         await signOut({ redirect: false });
         router.push(PAGE_ROUTES.login);
@@ -130,8 +132,9 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
                     <AlertDialogAction
                         className="bg-destructive hover:bg-destructive/90"
                         onClick={handleLogout}
+                        disabled={isLoading}
                     >
-                        Logout
+                        {isLoading ? "Logging out..." : "Logout"}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

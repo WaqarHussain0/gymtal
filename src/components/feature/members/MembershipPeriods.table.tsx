@@ -39,7 +39,7 @@ const MembershipPeriodTable: React.FC<IMembershipPeriodTableProps> = ({ membersh
                         </TableHeader>
                         <TableBody>
                             {membershipPeriods.map((period: any) => (
-                                <TableRow key={period._id}>
+                                <TableRow key={period._id?.toString()}>
                                     <TableCell>{new Date(period.startDate).toLocaleDateString()}</TableCell>
                                     <TableCell>{new Date(period.endDate).toLocaleDateString()}</TableCell>
                                     <TableCell>{period.createdBy.name}</TableCell>
