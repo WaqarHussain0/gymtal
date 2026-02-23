@@ -3,6 +3,7 @@ import MemberWrapper from "./Member.wrapper";
 import { redirect } from "next/navigation";
 import { UserRoleEnum } from "@/backend/modules/user/entity/user.entity";
 import { UserService } from "@/backend/modules/user/services/user.service";
+import connectToDB from "@/backend/utils/database.util";
 
 type SearchParams = Promise<{
     page?: string;
@@ -15,6 +16,8 @@ const Page = async ({ searchParams }: { searchParams: SearchParams }) => {
 
     const { page = 1, search } = await searchParams;
 
+    const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/gymtal";
+    await connectToDB(MONGODB_URI);
 
     const payload = {
         page: Number(page),

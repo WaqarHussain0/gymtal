@@ -118,7 +118,6 @@ export class UserService {
     const query: Record<string, any> = role
       ? { role } // specific role from payload
       : { role: { $ne: UserRoleEnum.MEMBER } }; // default: non-members
-    await connectToDB()
     if (search) {
       query["$or"] = [
         { name: { $regex: search, $options: "i" } },
