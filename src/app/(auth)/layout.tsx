@@ -13,7 +13,7 @@ export default function Layout({
         <Row className="w-full bg-[#C9FFDE] h-screen flex-col gap-6 justify-center items-center">
             <div className="w-full flex items-center justify-center flex-col">
                 <TextElement as="h1">
-                    FitLedger
+                Gymtal
                 </TextElement>
 
                 <TextElement as="p">

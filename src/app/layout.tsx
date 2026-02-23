@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FitLedger",
+  title: "Gymtal",
   description: "Gym Management System",
 };
 

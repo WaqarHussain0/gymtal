@@ -64,7 +64,7 @@ const Navbar: React.FC<INavbar> = ({ className }) => {
                     <Dumbbell className="w-6 h-6" />
                 </div>
                 <div>
-                    <h1 className="font-semibold text-lg">FitLedger</h1>
+                    <h1 className="font-semibold text-lg">Gymtal</h1>
                     <p className="text-xs text-blue-300">Gym Management</p>
                 </div>
             </div>
