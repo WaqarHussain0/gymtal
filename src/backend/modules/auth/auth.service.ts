@@ -14,7 +14,7 @@ export class AuthService {
 
         const user = await userService.findByEmail(email);
 
-        if (!user) {
+        if (!user || !user.password) {
             throw new Error("Invalid email or password");
         }
 
@@ -47,14 +47,14 @@ export class AuthService {
 
 
         // Delete existing reset token (if exists)
-        await userService.update(user._id, {
+        await userService.update(user._id.toString(), {
             resetPasswordToken: null,
             resetPasswordExpires: null,
         });
 
 
         // Save new token + expiry (15 minutes)
-        await userService.update(user._id, {
+        await userService.update(user._id.toString(), {
             resetPasswordToken: hashedToken,
             resetPasswordExpires: new Date(Date.now() + 15 * 60 * 1000),
         });
@@ -76,7 +76,7 @@ export class AuthService {
         const user = await userService.findByResetPasswordToken(hashedToken);
 
 
-        if (!user) {
+        if (!user || !user._id) {
             throw new Error("Invalid or expired token");
         }
 
@@ -86,7 +86,7 @@ export class AuthService {
         }
 
 
-        await userService.update(user._id, {
+        await userService.update(user._id.toString(), {
             password,
             resetPasswordToken: null,
             resetPasswordExpires: null,

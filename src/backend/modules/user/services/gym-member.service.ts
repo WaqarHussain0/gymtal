@@ -16,6 +16,9 @@ export class GymMemberService {
         // 1️⃣ Create User
         userDto.role = UserRoleEnum.MEMBER;
         const user = await userService.createUser(userDto);
+        if (!user || !user._id) {
+            throw new Error("Failed to create user");
+        }
 
         // 2️⃣ Create Membership Period
         const startDate = new Date();
@@ -23,7 +26,7 @@ export class GymMemberService {
         endDate.setMonth(startDate.getMonth() + 1);
 
         const membership = await membershipService.createMembershipPeriod({
-            userId: user._id,
+            userId: user._id.toString(),
             startDate,
             endDate,
             createdBy: adminId
@@ -31,8 +34,8 @@ export class GymMemberService {
 
         // 3️⃣ Create Payment Transaction
         await paymentService.createPayment({
-            userId: user._id,
-            membershipPeriodId: membership._id,
+            userId: user._id.toString(),
+            membershipPeriodId: membership._id.toString(),
             amount: feeAmount,
             paymentMethod: 'cash',
             receivedBy: adminId,
@@ -74,7 +77,7 @@ export class GymMemberService {
         // 2️⃣ Create Payment Transaction
         await paymentService.createPayment({
             userId,
-            membershipPeriodId: newPeriod._id,
+            membershipPeriodId: newPeriod._id.toString(),
             amount,
             paymentMethod: "cash", // or pass from controller if needed
             receivedBy: adminId,

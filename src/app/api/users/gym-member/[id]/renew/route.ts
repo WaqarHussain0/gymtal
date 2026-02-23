@@ -8,7 +8,7 @@ const gymMemberService = new GymMemberService();
 // update gym member subscription
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params; // gym member id
     const body = await req.json();

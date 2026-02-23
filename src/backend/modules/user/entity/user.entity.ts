@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 
 export enum UserRoleEnum {
   ADMIN = "admin",
@@ -11,7 +11,7 @@ export enum GenderEnum {
   FEMALE = "female",
 }
 
-export interface IUser extends Document {
+export interface IUser {
   name: string;
   email: string;
   password?: string | null;
@@ -20,31 +20,29 @@ export interface IUser extends Document {
   gender: GenderEnum | null;
   resetPasswordToken?: string | null;
   resetPasswordExpires?: Date | null;
+  isActive?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const UserSchema: Schema<IUser> = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     isActive: { type: Boolean, default: true },
-    password: { type: String, required: false, default: null },
+    password: { type: String, default: null },
     role: {
       type: String,
       enum: UserRoleEnum,
       default: UserRoleEnum.MEMBER,
     },
-    phone: { type: String, required: false, default: null },
-    gender: { type: String, enum: GenderEnum, required: false, default: null },
-    resetPasswordToken: { type: String, required: false, default: null },
-    resetPasswordExpires: { type: Date, required: false, default: null },
+    phone: { type: String, default: null },
+    gender: { type: String, enum: GenderEnum, default: null },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
-
 
 UserSchema.virtual("membershipPeriods", {
   ref: "MembershipPeriod",
@@ -58,12 +56,10 @@ UserSchema.virtual("paymentTransactions", {
   foreignField: "userId",
 });
 
-// Make sure virtuals are included in JSON
 UserSchema.set("toJSON", { virtuals: true });
 UserSchema.set("toObject", { virtuals: true });
 
-
-// Prevent model overwrite issue in Next.js hot reload
-const UserEntity: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+const UserEntity: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 
 export default UserEntity;

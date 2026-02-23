@@ -25,15 +25,15 @@ export class UserService {
           select: "name role", // optional
         },
       });
-  
+
     if (!user) {
       throw new Error(`User with id ${id} not found`);
     }
-  
+
     return user;
   }
 
-  
+
 
   // Find a user by email
   async findByEmail(email: string) {
@@ -58,16 +58,16 @@ export class UserService {
     // Default role to MEMBER if not provided (optional: can force in controller)
     const userRole = role || UserRoleEnum.MEMBER;
 
-    const user = await this.userEntity.create({
+    return await this.userEntity.create({
       name,
       email: email.trim().toLowerCase(),
       password: hashedPassword,
       role: userRole,
-      phone,
-      gender,
+      phone: phone || undefined,
+      gender: gender || undefined,
     });
 
-    return user;
+
   }
 
   // Update a user
