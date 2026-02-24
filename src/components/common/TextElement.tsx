@@ -32,7 +32,7 @@ const defaultClasses: Record<TextVariants, string> = {
   small: "",
   strong: "",
   em: "s",
-  a: "text-sm text-green-600 hover:underline font-body",
+  a: "text-sm text-blue-800 hover:underline font-body",
 };
 
 interface TextElementProps extends React.HTMLAttributes<HTMLElement> {

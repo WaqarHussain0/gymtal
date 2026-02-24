@@ -6,13 +6,14 @@ import { Shield, UserCog, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 
+
 interface IDashboardWrapperProps {
     adminUsers: number;
     staffUsers: number;
     memberUsers: number;
 }
 
-const DashboardWrapper: React.FC<IDashboardWrapperProps> = ({  adminUsers, staffUsers, memberUsers }) => {
+const DashboardWrapper: React.FC<IDashboardWrapperProps> = ({ adminUsers, staffUsers, memberUsers }) => {
 
     const { data: session } = useSession();
     const currentUser = session?.user;
