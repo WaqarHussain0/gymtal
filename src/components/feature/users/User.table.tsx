@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import UserDialog from "./User.dialog";
 import { deleteUserService } from "./service";
+import TextElement from "@/components/common/TextElement";
 
 interface IUserTable {
   users: any[];
@@ -164,7 +165,9 @@ const UserTable: React.FC<IUserTable> = ({ users, className }) => {
                 colSpan={columns.length}
                 className="h-24 text-center"
               >
-                No results.
+                 <TextElement as="p" className="text-center">
+                  No results.
+                </TextElement>
               </TableCell>
             </TableRow>
           )}

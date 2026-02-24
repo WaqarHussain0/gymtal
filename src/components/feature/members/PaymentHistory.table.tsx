@@ -1,3 +1,4 @@
+import TextElement from "@/components/common/TextElement";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -53,7 +54,9 @@ const PaymentHistoryTable: React.FC<IPaymentHistoryTableProps> = ({ paymentTrans
                         </TableBody>
                     </Table>
                 ) : (
-                    <p>No payment transactions found</p>
+                    <TextElement as="p" className="text-center">
+                        No payment transactions found
+                    </TextElement>
                 )}
             </CardContent>
         </Card>

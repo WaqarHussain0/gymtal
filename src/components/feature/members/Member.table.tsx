@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { deleteMemberService } from "./service";
 import PAGE_ROUTES from "@/constants/page-routes.constant";
+import TextElement from "@/components/common/TextElement";
 
 interface IMemberTable {
   members: any[];
@@ -166,7 +167,9 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
                 colSpan={columns.length}
                 className="h-24 text-center"
               >
-                No results.
+                <TextElement as="p" className="text-center">
+                  No results.
+                </TextElement>
               </TableCell>
             </TableRow>
           )}

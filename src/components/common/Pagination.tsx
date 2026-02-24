@@ -32,13 +32,13 @@ const Pagination = ({
 
   return (
     <Row
-      className={`bg-slate-200 rounded py-[10px] px-[20px] w-full justify-between ${className}`}
+      className={`bg-slate-200 rounded py-[6px] md:py-[10px] px-[20px] w-full justify-between flex-col md:flex-row  gap-2 md:gap-0 ${className}`}
     >
-      <Row className="gap-2">
-        <TextElement as="p" className="text-[14px]">
+      <Row className="gap-2 ">
+        <TextElement as="p" >
           Total Records:
         </TextElement>
-        <TextElement as="h3">{totalRecords}</TextElement>
+        <TextElement as="h4">{totalRecords}</TextElement>
       </Row>
 
       <Row className="gap-2">
@@ -52,7 +52,7 @@ const Pagination = ({
         )}
 
         <div className=" bg-white flex justify-center items-center rounded-md px-2 py-1">
-          <TextElement as="h3" className="!text-">
+          <TextElement as="h4" className="">
             {page} / {totalPage}
           </TextElement>
         </div>

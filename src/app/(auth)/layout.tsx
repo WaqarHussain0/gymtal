@@ -10,13 +10,13 @@ export default function Layout({
 
 
     return (
-        <Row className="w-full bg-[#C9FFDE] h-screen flex-col gap-6 justify-center items-center">
+        <Row className="w-full bg-blue-900 h-screen flex-col gap-6 justify-center items-center">
             <div className="w-full flex items-center justify-center flex-col">
-                <TextElement as="h1">
-                Gymtal
+                <TextElement as="h1" className="font-heading text-4xl font-bold text-primary-foreground">
+                    Gymtal
                 </TextElement>
 
-                <TextElement as="p">
+                <TextElement as="p" className="text-primary-foreground/60">
                     Gym Management
                 </TextElement>
             </div>

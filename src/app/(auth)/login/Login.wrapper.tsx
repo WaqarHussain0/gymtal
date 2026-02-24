@@ -70,6 +70,7 @@ const LoginWrapper = () => {
             <TextElement as="h1" className="mb-8">
                 Login
             </TextElement>
+
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                 {/* Email Input */}
                 <Controller

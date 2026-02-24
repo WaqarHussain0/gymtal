@@ -6,7 +6,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Row className="w-full h-screen">
             <Navbar className="w-64 h-full" />
 
-            <Row className="flex-col items-start flex-1 bg-slate-100 h-full p-4 overflow-y-auto">
+            <Row className="flex-col items-start flex-1 bg-slate-100 h-full p-4 md:p-6 overflow-y-auto">
 
                 {children}
             </Row>

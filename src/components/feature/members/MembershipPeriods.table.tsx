@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCallback, useState } from "react";
 import RenewMembershipDialog from "./RenewMembership.dialog";
+import TextElement from "@/components/common/TextElement";
 
 
 interface IMembershipPeriodTableProps {
@@ -49,7 +50,9 @@ const MembershipPeriodTable: React.FC<IMembershipPeriodTableProps> = ({ membersh
                         </TableBody>
                     </Table>
                 ) : (
-                    <p>No membership periods found</p>
+                    <TextElement as="p" className="text-center">
+                        No membership periods found
+                    </TextElement>
                 )}
             </CardContent>
 

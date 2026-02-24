@@ -1,8 +1,16 @@
-const Page = () => {
+
+import DashboardWrapper from "./Dashboard.wrapper";
+import { UserService } from "@/backend/modules/user/services/user.service";
+
+const userService = new UserService();
+
+const Page = async () => {
+
+    const result = await userService.getCountByRole();
+
+
     return (
-        <div>
-            <h1>Dashboard Page</h1>
-        </div>
+        <DashboardWrapper adminUsers={result.adminUsers} staffUsers={result.staffUsers} memberUsers={result.memberUsers} />
     );
 };
 

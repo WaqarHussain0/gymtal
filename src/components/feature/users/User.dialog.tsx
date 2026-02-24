@@ -115,8 +115,8 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
+    <Dialog open={open} onOpenChange={onClose} >
+      <DialogContent >
         <DialogHeader>
           <DialogTitle>{user ? "Edit" : "Add New"} Staff User</DialogTitle>
           <DialogDescription>
@@ -127,7 +127,7 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Plan Name */}
             <div className="space-y-2">
               <Label>Full Name *</Label>
@@ -160,8 +160,8 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
             </div>
           </div>
 
-          {/* Duration + Price */}
-          <div className={`grid gap-4 ${user ? "grid-cols-1" : "grid-cols-2"}`}>
+          {/* Password + Role */}
+          <div className={`grid gap-4 ${user ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
             {!user && (
               <div className="space-y-2">
                 <Label>Password *</Label>
@@ -218,7 +218,7 @@ const UserDialog: React.FC<IUserDialogProps> = ({ open, onClose, user }) => {
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-3">
             <Button
               type="button"
               variant="outline"

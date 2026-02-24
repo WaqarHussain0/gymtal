@@ -32,7 +32,7 @@ export function CustomBreadcrumb({
       <BreadcrumbList>
         {items?.map((item, index) => (
           <React.Fragment key={`${item.label}-${index}`}>
-            <BreadcrumbItem>
+            <BreadcrumbItem className="font-body">
               {item.linkTo ? (
                 <BreadcrumbLink asChild>
                   <Link className="capitalize" href={item.linkTo}>{item.label}</Link>

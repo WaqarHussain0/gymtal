@@ -19,20 +19,20 @@ type TextVariants =
 
 // Default Tailwind utility classes per element
 const defaultClasses: Record<TextVariants, string> = {
-  h1: "text-3xl font-semibold text-foreground",
-  h2: "text-3xl font-bold",
-  h3: "font-[500]",
-  h4: "text-[10px] lg:text-[12px] text-[#333333]",
-  h5: "",
-  h6: "",
-  p: "text-muted-foreground",
-  span: "text-[#52545B] font-400] text-[12px]",
-  label: "text-[14px] font-[400] text-[#4D4D4D]",
+  h1: "text-3xl font-semibold text-foreground font-heading",
+  h2: "text-3xl font-bold font-heading",
+  h3: " font-body text-xl font-bold",
+  h4: " text-md font-body",
+  h5: "font-body text-sm",
+  h6: "font-body",
+  p: "text-muted-foreground font-body",
+  span: "text-[#52545B] font-400] text-[12px] font-body",
+  label: "text-[14px] font-[400] text-[#4D4D4D] font-body",
   blockquote: "",
   small: "",
   strong: "",
   em: "s",
-  a: "text-sm text-green-600 hover:underline",
+  a: "text-sm text-green-600 hover:underline font-body",
 };
 
 interface TextElementProps extends React.HTMLAttributes<HTMLElement> {

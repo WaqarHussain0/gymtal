@@ -1,4 +1,3 @@
-"use client";
 import { CustomBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import Row from "@/components/common/Row";
 import MemberForm from "@/components/feature/members/Member.form";

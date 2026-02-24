@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useDebouncedSearch } from "@/hooks/useDebouncedSearch.hook";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
+import TextElement from "@/components/common/TextElement";
 
 interface IMemberWrapper {
     members: any[];
@@ -54,12 +55,12 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, meta, currentPage })
 
     return (
         <div className="w-full space-y-3">
-            <Row className="justify-between">
-                <Row className="flex-col gap-2 items-start">
-                    <h1 className="text-2xl font-bold">Members</h1>
-                    <p>Manage your gym members</p>
+                        <Row className="justify-between flex-col md:flex-row items-start md:items-center space-y-3 md:space-y-0">
+                <Row className="flex-col items-start">
+                    <TextElement as="h3" className="font-semibold">Members</TextElement>
+                    <TextElement as="p" className="sm">Manage your gym members</TextElement>
                 </Row>
-                <Button onClick={() => router.push(PAGE_ROUTES.createMember)}>
+                <Button className="bg-blue-900 hover:bg-blue-800 text-primary-foreground" onClick={() => router.push(PAGE_ROUTES.createMember)}>
                     <PlusIcon className="size-4" />
                     Add Member
                 </Button>
@@ -87,7 +88,7 @@ const MemberWrapper: React.FC<IMemberWrapper> = ({ members, meta, currentPage })
                         >
                             <Input
                                 placeholder="Search by name or email..."
-                                className="pl-10 w-80"
+                                className="pl-10 w-full md:w-80"
                                 value={searchInput}
                                 onChange={(e) => handleSearch(e.target.value)}
                             />

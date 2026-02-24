@@ -3,6 +3,7 @@
 import { CustomBreadcrumb } from "@/components/common/CustomBreadcrumb";
 import Pagination from "@/components/common/Pagination";
 import Row from "@/components/common/Row";
+import TextElement from "@/components/common/TextElement";
 import UserDialog from "@/components/feature/users/User.dialog";
 import UserTable from "@/components/feature/users/User.table";
 import { Button } from "@/components/ui/button";
@@ -63,19 +64,18 @@ const UserWrapper: React.FC<IUserWrapper> = ({ users, meta, currentPage }) => {
         <div className="w-full space-y-3">
 
 
-            <Row className="justify-between">
-                <Row className="flex-col gap-2 items-start">
+            <Row className="justify-between flex-col md:flex-row items-start md:items-center space-y-3 md:space-y-0">
+                <Row className="flex-col items-start">
 
-                    <h1 className="text-2xl font-bold">
-                        Staff Users
-                    </h1>
-                    <p>Manage your gym staff users</p>
+                    <TextElement as="h3" className=""> Staff Users</TextElement>
+                    <TextElement as="p" className="sm">Manage your gym staff users</TextElement>
+
+
                 </Row>
 
-
-                <Button onClick={handleCloseDialog}>
+                <Button className="bg-blue-900 hover:bg-blue-800 text-primary-foreground" onClick={handleCloseDialog}>
                     <PlusIcon className="size-4" />
-                    Add User
+                    Add Staff
 
                 </Button>
 
@@ -104,7 +104,7 @@ const UserWrapper: React.FC<IUserWrapper> = ({ users, meta, currentPage }) => {
                         >
                             <Input
                                 placeholder="Search by name or email..."
-                                className="pl-10 w-80"
+                                className="pl-10 w-full md:w-80"
                                 value={searchInput}
                                 onChange={(e) => handleSearch(e.target.value)}
                             />

@@ -156,7 +156,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Name & Email */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>Full Name *</Label>
                         <Input
@@ -185,7 +185,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                 </div>
 
                 {/* Phone & Gender */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>Phone *</Label>
                         <Input
@@ -221,7 +221,7 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                 </div>
 
                 {/* Enrolled & Expiry Dates */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>Enrolled Date *</Label>
                         <Controller
@@ -248,27 +248,26 @@ const MemberForm: React.FC<IPageProps> = ({ member }) => {
                 </div>
 
                 {/* Fee Paid */}
-                <div className="grid grid-cols-1 gap-4">
-                    <div className="space-y-2">
-                        <Label>Fee Paid *</Label>
-                        <Input
-                            type="number"
-                            placeholder="Enter fee paid"
-                            {...register("feePaid", { required: "Fee paid is required" })}
-                        />
-                        {errors.feePaid && (
-                            <p className="text-red-500 text-sm">{errors.feePaid.message}</p>
-                        )}
-                    </div>
+                <div className="space-y-2">
+                    <Label>Fee Paid *</Label>
+                    <Input
+                        type="number"
+                        placeholder="Enter fee paid"
+                        {...register("feePaid", { required: "Fee paid is required" })}
+                    />
+                    {errors.feePaid && (
+                        <p className="text-red-500 text-sm">{errors.feePaid.message}</p>
+                    )}
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex justify-end gap-3">
                     <Button
                         type="button"
                         variant="outline"
                         onClick={() => {
                             reset();
+                            router.push(PAGE_ROUTES.members);
                         }}
                     >
                         Cancel

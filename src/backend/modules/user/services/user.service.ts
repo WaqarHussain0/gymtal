@@ -136,11 +136,20 @@ export class UserService {
       .find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
+
+    const serializedUsers = data.map((user) => ({
+      ...user,
+      _id: user._id.toString(),
+      createdAt: user.createdAt?.toISOString?.() || user.createdAt,
+      updatedAt: user.updatedAt?.toISOString?.() || user.updatedAt,
+    }));
 
     const totalPages = Math.ceil(totalRecords / limit);
 
-    return { data, meta: { page, totalRecords, totalPages } };
+    return { data: serializedUsers, meta: { page, totalRecords, totalPages } };
   }
 
   // Delete a user
@@ -194,9 +203,37 @@ export class UserService {
     }
     return updatedUser;
   }
+
   // Find user by reset password token
   async findByResetPasswordToken(token: string) {
     await connectToDB()
     return await this.userEntity.findOne({ resetPasswordToken: token });
+  }
+
+
+  // Get count of users - admin, staff, member
+  async getCountByRole() {
+    await connectToDB();
+
+    const result = await this.userEntity.aggregate([
+      {
+        $group: {
+          _id: "$role",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    let adminUsers = 0;
+    let staffUsers = 0;
+    let memberUsers = 0;
+
+    result.forEach((item) => {
+      if (item._id === "admin") adminUsers = item.count;
+      if (item._id === "staff") staffUsers = item.count;
+      if (item._id === "member") memberUsers = item.count;
+    });
+
+    return { adminUsers, staffUsers, memberUsers };
   }
 }
