@@ -65,7 +65,10 @@ export const getTransporter = (): Transporter => {
 /*                              Email Sender                                   */
 /* -------------------------------------------------------------------------- */
 
-export const sendEmail = async (options: ISendEmailOptions, retries = 3) => {
+export const sendEmail: any = async (
+  options: ISendEmailOptions,
+  retries = 3,
+) => {
   const transporter = getTransporter();
 
   const mailOptions = {
