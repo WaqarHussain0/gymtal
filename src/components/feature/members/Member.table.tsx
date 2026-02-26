@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -40,7 +40,6 @@ interface IMemberTable {
   className?: string;
 }
 const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
-
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
@@ -58,8 +57,6 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
         label: "Enrolled Date",
       },
 
-
-
       {
         label: "Phone",
       },
@@ -71,18 +68,18 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
     [],
   );
 
+  const handleViewClick = (id: string) =>
+    router.push(PAGE_ROUTES.viewMember(id));
+
   const getActions = (member: any) => {
     return [
       {
         label: "View",
-        onClick: () => {
-          router.push(PAGE_ROUTES.viewMember(member._id));
-        },
+        onClick: () => handleViewClick(member._id),
         separatorAfter: false,
         show: true,
         icon: Eye,
       },
-
 
       {
         label: "Delete",
@@ -112,7 +109,6 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
 
   return (
     <div className={className}>
-
       <Table>
         <TableHeader>
           <TableRow>
@@ -126,11 +122,18 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
           {members.length > 0 ? (
             members.map((member) => (
               <TableRow key={member._id?.toString()}>
-                <TableCell className="capitalize">{member?.name}</TableCell>
+                <TableCell
+                  onClick={() => handleViewClick(member._id)}
+                  className="capitalize underline cursor-pointer"
+                >
+                  {member?.name}
+                </TableCell>
                 <TableCell>{member?.email}</TableCell>
-                <TableCell>{member?.createdAt
-                  ? new Date(member.createdAt).toLocaleDateString()
-                  : "N/A"}</TableCell>
+                <TableCell>
+                  {member?.createdAt
+                    ? new Date(member.createdAt).toLocaleDateString()
+                    : "N/A"}
+                </TableCell>
 
                 <TableCell>{member?.phone || "N/A"}</TableCell>
                 <TableCell>
@@ -151,9 +154,7 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
                               )}
                               {action.label}
                             </DropdownMenuItem>
-                            {action.separatorAfter && (
-                              <DropdownMenuSeparator />
-                            )}
+                            {action.separatorAfter && <DropdownMenuSeparator />}
                           </div>
                         ))}
                     </DropdownMenuContent>
@@ -163,10 +164,7 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-24 text-center"
-              >
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 <TextElement as="p" className="text-center">
                   No results.
                 </TextElement>
@@ -198,8 +196,6 @@ const MemberTable: React.FC<IMemberTable> = ({ members, className }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-
     </div>
   );
 };

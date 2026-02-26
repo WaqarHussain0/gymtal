@@ -3,14 +3,14 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import UserEntity, { UserRoleEnum } from "../entity/user.entity";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { sendEmail } from "@/lib/email.util";
+import { onboardAdminEmailTemplate } from "@/constants/email-templates/admin-onboard.email-template";
 
 export class UserService {
-
   private readonly userEntity = UserEntity;
 
-
   async findById(id: mongoose.Types.ObjectId) {
-    await connectToDB()
+    await connectToDB();
     const user = await this.userEntity
       .findById(id)
       .populate({
@@ -28,7 +28,8 @@ export class UserService {
           path: "receivedBy",
           select: "name role", // optional
         },
-      }).lean();
+      })
+      .lean({ virtuals: true });
 
     if (!user) {
       throw new Error(`User with id ${id} not found`);
@@ -37,11 +38,9 @@ export class UserService {
     return user;
   }
 
-
-
   // Find a user by email
   async findByEmail(email: string) {
-    await connectToDB()
+    await connectToDB();
     return await this.userEntity.findOne({
       email: email?.trim()?.toLowerCase(),
     });
@@ -50,8 +49,11 @@ export class UserService {
   // Create a new user (admin/staff/member)
   async createUser(payload: CreateUserDto) {
     const { name, email, password, role, phone, gender } = payload;
-    await connectToDB()
+
+    await connectToDB();
+
     const existingUser = await this.findByEmail(email);
+
     if (existingUser) {
       throw new Error(
         `User with email ${email} already exists, please use a different email.`,
@@ -63,6 +65,25 @@ export class UserService {
     // Default role to MEMBER if not provided (optional: can force in controller)
     const userRole = role || UserRoleEnum.MEMBER;
 
+    if (userRole !== UserRoleEnum.MEMBER && password) {
+      const loginPageLink = `${process.env.NEXTAUTH_URL}/login`;
+
+      // prepare email template
+      const html = onboardAdminEmailTemplate({
+        loginPageLink,
+        password,
+        userEmail: email.trim().toLowerCase(),
+        userName: name,
+        userRole: role as string,
+      });
+
+      await sendEmail({
+        to: email,
+        subject: "Password Reset Request",
+        html,
+      });
+    }
+
     return await this.userEntity.create({
       name,
       email: email.trim().toLowerCase(),
@@ -71,14 +92,12 @@ export class UserService {
       phone: phone || undefined,
       gender: gender || undefined,
     });
-
-
   }
 
   // Update a user
   async updateUser(id: string, payload: Partial<CreateUserDto>) {
     const { name, email, role, phone, gender } = payload;
-    await connectToDB()
+    await connectToDB();
     if (email) {
       const existingUser = await this.findByEmail(email);
       if (existingUser && existingUser._id.toString() !== id) {
@@ -115,7 +134,7 @@ export class UserService {
     limit?: number;
     role?: UserRoleEnum;
   }) {
-    await connectToDB()
+    await connectToDB();
 
     // If role is provided, use it; otherwise default to non-member
     const query: Record<string, any> = role
@@ -139,7 +158,6 @@ export class UserService {
       .sort({ createdAt: -1 })
       .lean();
 
-
     const serializedUsers = data.map((user) => ({
       ...user,
       _id: user._id.toString(),
@@ -154,7 +172,7 @@ export class UserService {
 
   // Delete a user
   async deleteUser(id: string) {
-    await connectToDB()
+    await connectToDB();
     const deletedUser = await this.userEntity.findByIdAndDelete(id);
 
     if (!deletedUser) {
@@ -180,7 +198,7 @@ export class UserService {
       resetPasswordExpires: Date | null;
     }>,
   ) {
-    await connectToDB()
+    await connectToDB();
     const updateData: any = { ...payload }; // Normalize email if provided
 
     // Normalize email if provided
@@ -206,10 +224,9 @@ export class UserService {
 
   // Find user by reset password token
   async findByResetPasswordToken(token: string) {
-    await connectToDB()
+    await connectToDB();
     return await this.userEntity.findOne({ resetPasswordToken: token });
   }
-
 
   // Get count of users - admin, staff, member
   async getCountByRole() {
