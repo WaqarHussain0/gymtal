@@ -25,10 +25,12 @@ const MembershipPeriodTable: React.FC<IMembershipPeriodTableProps> = ({
 }) => {
   const [showRenewMembershipDialog, setShowRenewMembershipDialog] =
     useState<boolean>(false);
+
   const handleCloseDialog = useCallback(
     () => setShowRenewMembershipDialog((prev) => !prev),
     [],
   );
+
   return (
     <Card className="w-full">
       <CardHeader>

@@ -55,7 +55,7 @@ const ViewGymMemberWrapper: React.FC<IViewGymMemberWrapper> = ({ member }) => {
           <CardTitle>Profile Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-col-2 md:grid-cols-5 gap-2">
             {profileInfo.map((info) => (
               <div key={info.label}>
                 <p className="text-foreground text-left font-medium">
@@ -68,7 +68,7 @@ const ViewGymMemberWrapper: React.FC<IViewGymMemberWrapper> = ({ member }) => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4 w-full mt-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-3">
         {/* Membership Periods */}
         <MembershipPeriodTable
           userId={member._id?.toString()}

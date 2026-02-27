@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const userDto = await validateDto(CreateUserDto, user);
 
     // Create user using the service
-    const response = await gymMemberService.enrollNewMember(
+    await gymMemberService.enrollNewMember(
       userDto,
       amount,
       createdByUserId,
@@ -34,7 +34,10 @@ export async function POST(req: NextRequest) {
     );
 
     // Return success response
-    return NextResponse.json({ user: response }, { status: 201 });
+    return NextResponse.json(
+      { message: "Gym member enrolled successfully" },
+      { status: 201 },
+    );
   } catch (err: any) {
     // Handle validation errors or service errors
     console.error("Error creating user:", err);

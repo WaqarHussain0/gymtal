@@ -5,9 +5,13 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/email.util";
 import { onboardAdminEmailTemplate } from "@/constants/email-templates/admin-onboard.email-template";
+// import PaymentTransactionEntity from "../../payment-transaction/entity/PaymentTransaction.entity";
+// import MembershipPeriodEntity from "../../membership-period/entity/MembershipPeriod.entity";
 
 export class UserService {
   private readonly userEntity = UserEntity;
+  // private readonly paymentEntity = PaymentTransactionEntity;
+  // private readonly membershipEntity = MembershipPeriodEntity;
 
   async findById(id: mongoose.Types.ObjectId) {
     await connectToDB();
@@ -179,8 +183,10 @@ export class UserService {
       throw new Error(`User with id ${id} not found`);
     }
 
-    // No more memberEntity reference here
-    // MembershipPeriods and PaymentTransactions are handled in their respective services
+    // await Promise.all([
+    //   this.membershipEntity.deleteMany({ userId: id }),
+    //   this.paymentEntity.deleteMany({ userId: id }),
+    // ]);
 
     return deletedUser;
   }
