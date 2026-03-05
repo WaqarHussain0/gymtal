@@ -4,6 +4,7 @@ import { LoginDto } from "./dto/login.dto";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { forgotPasswordEmailTemplate } from "@/constants/email-templates/forgot-password.email-template";
+import { after } from "next/server";
 
 const userService = new UserService();
 export class AuthService {
@@ -61,10 +62,12 @@ export class AuthService {
       userName: user.name || "there",
     });
 
-    await sendEmail({
-      to: user.email,
-      subject: "Password Reset Request",
-      html,
+    after(async () => {
+      await sendEmail({
+        to: user.email,
+        subject: "Password Reset Request",
+        html,
+      });
     });
 
     return {

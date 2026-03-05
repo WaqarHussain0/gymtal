@@ -6,6 +6,7 @@ import { UserRoleEnum } from "../entity/user.entity";
 import { UserService } from "./user.service";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/email.util";
+import { after } from "next/server";
 
 const userService = new UserService();
 const membershipService = new MembershipPeriodService();
@@ -63,10 +64,12 @@ export class GymMemberService {
       membershipPeriodEnd: parsedEndDate,
     });
 
-    await sendEmail({
-      to: userDto.email,
-      subject: "Welcome to Gymtal!",
-      html,
+    after(async () => {
+      await sendEmail({
+        to: userDto.email,
+        subject: "Welcome to Gymtal!",
+        html,
+      });
     });
 
     return user;

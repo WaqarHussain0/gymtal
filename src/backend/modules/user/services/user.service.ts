@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/email.util";
 import { onboardAdminEmailTemplate } from "@/constants/email-templates/admin-onboard.email-template";
+import { after } from "next/server";
 // import PaymentTransactionEntity from "../../payment-transaction/entity/PaymentTransaction.entity";
 // import MembershipPeriodEntity from "../../membership-period/entity/MembershipPeriod.entity";
 
@@ -81,10 +82,12 @@ export class UserService {
         userRole: role as string,
       });
 
-      await sendEmail({
-        to: email,
-        subject: "Password Reset Request",
-        html,
+      after(async () => {
+        await sendEmail({
+          to: email,
+          subject: "Welcome to Gymtal!",
+          html,
+        });
       });
     }
 
